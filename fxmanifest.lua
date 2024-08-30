@@ -1,18 +1,13 @@
 game 'common'
-
 fx_version 'cerulean'
+
 author 'AvarianKnight'
 description 'VOIP built using FiveM\'s built in mumble.'
-
-dependencies {
-	'/onesync',
-}
-
-lua54 'yes'
 
 shared_script 'shared.lua'
 
 client_scripts {
+    '@qbx_core/modules/playerdata.lua',
 	'client/utils/*',
 	'client/init/proximity.lua',
 	'client/init/init.lua',
@@ -68,3 +63,9 @@ convar_category 'PMA-Voice' {
 		{ "Hide server endpoints in logs",         "$voice_hideEndpoints",        "CV_INT",    "1" },
 	}
 }
+
+dependencies {
+	'/onesync',
+}
+
+lua54 'yes'
