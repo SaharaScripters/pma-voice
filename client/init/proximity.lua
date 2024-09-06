@@ -1,7 +1,7 @@
 -- used when muted
 local disableUpdates = false
 local isListenerEnabled = false
-local plyCoords = GetEntityCoords(PlayerPedId())
+local plyCoords = GetEntityCoords(cache.ped)
 proximity = MumbleGetTalkerProximity()
 currentTargets = {}
 
@@ -25,7 +25,7 @@ end)
 function addNearbyPlayers()
 	if disableUpdates then return end
 	-- update here so we don't have to update every call of addProximityCheck
-	plyCoords = GetEntityCoords(PlayerPedId())
+	plyCoords = GetEntityCoords(cache.ped)
 	proximity = MumbleGetTalkerProximity()
 	currentTargets = {}
 	MumbleClearVoiceTargetChannels(voiceTarget)
@@ -116,7 +116,7 @@ CreateThread(function()
 		end
 		-- Leave the check here as we don't want to do any of this logic
 		if GetConvarInt('voice_enableUi', 1) == 1 then
-			local curTalkingStatus = MumbleIsPlayerTalking(PlayerId()) == 1
+			local curTalkingStatus = MumbleIsPlayerTalking(cache.playerId) == 1
 			if lastRadioStatus ~= radioPressed or lastTalkingStatus ~= curTalkingStatus then
 				lastRadioStatus = radioPressed
 				lastTalkingStatus = curTalkingStatus

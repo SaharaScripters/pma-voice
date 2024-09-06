@@ -7,7 +7,7 @@ gameVersion = GetGameName()
 -- these are just here to satisfy linting
 if not IsDuplicityVersion() then
 	LocalPlayer = LocalPlayer
-	playerServerId = GetPlayerServerId(PlayerId())
+	playerServerId = GetPlayerServerId(cache.playerId)
 	if gameVersion == "redm" then
 		function CreateAudioSubmix(name)
 			return Citizen.InvokeNative(0x658d2bc8, name, Citizen.ResultAsInteger())

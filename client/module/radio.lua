@@ -167,17 +167,21 @@ end)
 function isDead()
 	if LocalPlayer.state.isDead then
 		return true
-	elseif IsPlayerDead(PlayerId()) then
+	elseif IsPlayerDead(cache.playerId) then
 		return true
 	end
 	return false
+end
+
+function isCuffedZiptied()
+	return LocalPlayer.state.isCuffed or LocalPlayer.state.isZiptied
 end
 
 function isRadioAnimEnabled()
 	if
 		GetConvarInt('voice_enableRadioAnim', 1) == 1
 		and not (GetConvarInt('voice_disableVehicleRadioAnim', 0) == 1
-			and IsPedInAnyVehicle(PlayerPedId(), false))
+			and IsPedInAnyVehicle(cache.ped, false))
 		and not disableRadioAnim then
 		return true
 	end
@@ -186,7 +190,7 @@ end
 
 RegisterCommand('+radiotalk', function()
 	if GetConvarInt('voice_enableRadios', 1) ~= 1 then return end
-	if isDead() then return end
+	if isDead() or isCuffedZiptied() then return end
 	if not isRadioEnabled() then return end
 	if not radioPressed then
 		if radioChannel > 0 then
@@ -208,17 +212,17 @@ RegisterCommand('+radiotalk', function()
 				LocalPlayer.state:set("radioActive", true, true);
 				local checkFailed = false
 				while radioPressed do
-					if radioChannel < 0 or isDead() or not isRadioEnabled() then
+					if radioChannel < 0 or isDead() or isCuffedZiptied() or not isRadioEnabled() then
 						checkFailed = true
 						break
 					end
 					if shouldPlayAnimation and HasAnimDictLoaded(dict) then
-						if not IsEntityPlayingAnim(PlayerPedId(), dict, anim, 3) then
-							TaskPlayAnim(PlayerPedId(), dict, anim, 8.0, 2.0, -1, 50, 2.0, false,
+						if not IsEntityPlayingAnim(cache.ped, dict, anim, 3) then
+							TaskPlayAnim(cache.ped, dict, anim, 8.0, 2.0, -1, 50, 2.0, false,
 								false,
 							false)
 							if DoesEntityExist(radioProp) then
-								AttachEntityToEntity(radioProp, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 18905), 0.130000, 0.050000, 0.000000, -111.300751, 0.000000, -44.100067, true, true, false, true, 1, true)
+								AttachEntityToEntity(radioProp, cache.ped, GetPedBoneIndex(cache.ped, 18905), 0.130000, 0.050000, 0.000000, -111.300751, 0.000000, -44.100067, true, true, false, true, 1, true)
 							end
 						end
 					end
@@ -253,7 +257,7 @@ RegisterCommand('-radiotalk', function()
 		LocalPlayer.state:set("radioActive", false, true);
 		playMicClicks(false)
 		if GetConvarInt('voice_enableRadioAnim', 1) == 1 then
-			StopAnimTask(PlayerPedId(), dict, anim, -4.0)
+			StopAnimTask(cache.ped, dict, anim, -4.0)
 		end
 		if DoesEntityExist(radioProp) then
 			DeleteEntity(radioProp)

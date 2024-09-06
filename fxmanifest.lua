@@ -4,7 +4,10 @@ fx_version 'cerulean'
 author 'AvarianKnight'
 description 'VOIP built using FiveM\'s built in mumble.'
 
-shared_script 'shared.lua'
+shared_scripts {
+    '@ox_lib/init.lua',
+    'shared.lua'
+}
 
 client_scripts {
     '@qbx_core/modules/playerdata.lua',
